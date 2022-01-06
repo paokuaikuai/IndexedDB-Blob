@@ -1,0 +1,26 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script/kvstore.js"></script>
+    <script src="script/filedb.js"></script>
+    <script>
+        let pos = 0;
+        let fdb = new FileDB(1);
+        async function test() {
+            let t = new Date().getTime();
+            let array = await fdb.readInt16Array(pos, 8 * 256 * 60 * 2);
+            pos = pos + 8 * 256 * 60 * 2;
+            console.log(array);
+        }
+    </script>
+    <title>Test</title>
+</head>
+
+<body>
+    <button onclick="test()">点击</button>
+</body>
+
+</html>
