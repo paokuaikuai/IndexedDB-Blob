@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="zrender.js"></script>
+    <script src="data.json"></script>
+    <script src="ecg.js"></script>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script>
+        //根据需求进行配置
+        let layout = {
+            "3*4": {
+                row: 3,
+                col: 4,
+                single: []
+            },
+            "3*4+1": {
+                row: 3,
+                col: 4,
+                single: ["MDC_ECG_LEAD_II"]
+            },
+            "3*4+3": {
+                row: 3,
+                col: 4,
+                single: ["MDC_ECG_LEAD_I", "MDC_ECG_LEAD_II", "MDC_ECG_LEAD_III"]
+            },
+            "6*2": {
+                row: 6,
+                col: 2,
+                single: []
+            },
+            "6*2+1": {
+                row: 6,
+                col: 2,
+                single: ["MDC_ECG_LEAD_V5"]
+            },
+            "12*1": {
+                row: 12,
+                col: 1,
+                single: []
+            }
+        };
+
+        let ecg = new ZRECG({
+            id: "main",
+            pix_mm: 3.777 * 1, //缩放1
+            opts: {
+                renderer: window.__ZRENDER__DEFAULT__RENDERER__ || "svg"  //zrender它提供 canvas、svg、vml 等多种渲染方式
+            },
+            ecg: {
+                data: data.data.waveform,
+                opts: {
+                    speed: 25,
+                    gain: 10,
+                    layout: layout["6*2+1"]
+                },
+                style: { //zrender属性
+                    stroke: "black",     //线的颜色
+                    lineWidth: 1,        //线宽
+                    lineDash: [0]
+                }
+            },
+            grid: {
+                col: 5 * 18, //每5个为一秒
+                row: 5 * 8,
+                style: { //zrender属性
+                    fill: "none",
+                    stroke: "red",
+                    lineWidth: 1,
+                    opacity: 1
+                },
+                minStyle: {  //zrender属性
+                    fill: "none",
+                    stroke: "red",
+                    lineWidth: 0.5,
+                    opacity: 0.3
+                }
+            }
+        });
+        ecg.draw();
+
+    </script>
+</body>
+
+</html>
