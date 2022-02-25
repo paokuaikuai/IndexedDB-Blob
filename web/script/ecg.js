@@ -118,7 +118,7 @@ ZRECG.prototype.drawEcg = function () {
     }
 
     for (let i = 0; i < lay.single.length; i++) {
-        this.drawECGPolylineGroup(lay.single[i], this.transformData(this.config.ecg.data[lay.single[i]], waveWidth * lay.col), [this.config.pix_mm * 5, waveHeight * lay.row + waveHeight / 2]);
+        this.drawECGPolylineGroup(lay.single[i], this.transformData(this.config.ecg.data[lay.single[i]], waveWidth * lay.col), [this.config.pix_mm * 5, waveHeight * lay.row + waveHeight * i + waveHeight / 2]);
     }
 
     this.drawGainLine();
