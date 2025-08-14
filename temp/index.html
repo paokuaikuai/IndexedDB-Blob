@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纸布局示例</title>
+    <link href="./svgTemp.css" rel="stylesheet">
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script src="./svgTempUtils.js"></script>
+</head>
+
+<body>
+    <!-- 左侧栏 -->
+    <div class="left-sidebar">
+        <h2>元素列表</h2>
+        <ul id="document-list">
+
+        </ul>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部菜单 -->
+        <div class="top-menu">
+            <h1>模版编辑器</h1>
+            <div class="menu-buttons">
+                <button class="temp-export">导出</button>
+                <button class="temp-import">导入</button>
+                <input type="file" id="fileInput" accept=".svg" style="display: none;" />
+            </div>
+        </div>
+
+        <!--纸容器 -->
+        <div class="paper-container" id="paper-container">
+        </div>
+    </div>
+
+    <!-- 右侧栏 -->
+    <div class="right-sidebar" id="element-attr">
+
+    </div>
+
+    <!-- 拖拽时的幽灵元素 -->
+    <div id="drag-ghost" class="drag-ghost"></div>
+
+    <script>
+        $(document).ready(function () {
+            const paperConfig = {
+                a4: {
+                    landscape: {
+                        width: 1064,
+                        height: 775,
+                        pixmm: 3.77,
+                        grid: {
+                            xboxNum: 54,
+                            yboxNum: 28,
+                            offsetY: 200
+                        },
+                    },
+                    portrait: {
+                        width: 775,
+                        height: 1064,
+                        pixmm: 3.77,
+                        grid: {
+                            xboxNum: 39,
+                            yboxNum: 30,
+                            offsetY: 400
+                        },
+                    }
+                },
+            };
+
+            const svgDesigner = new SVGTempDesigner();
+
+            svgDesigner.init("document-list", "paper-container", "element-attr", Object.assign(paperConfig.a4.landscape, { id: "paper", class: "paper" }));
+
+            $(".temp-export").click(() => {
+                svgDesigner.export("svg-template.svg");
+            });
+
+            $('.temp-import').click(function () {
+                $('#fileInput').click();
+            });
+
+            $('#fileInput').change(function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.name.endsWith('.svg')) {
+                    alert('请选择 SVG 文件 (.svg)');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const svgContent = event.target.result;
+
+                    const $svg = $(svgContent);
+
+                    let paper = JSON.parse($svg.attr("data-opts"));
+
+                    svgDesigner.load("document-list", "paper-container", "element-attr", svgContent);
+                };
+                reader.readAsText(file);
+            });
+        });
+    </script>
+</body>
+
+</html>
